@@ -7,8 +7,7 @@ pydantic==2.5.0
 # PDF processing dependencies
 pypdf==3.17.1
 pytesseract==0.3.10
-Pillow==10.1.0
-
+Pillow==11.2.0
 # HTTP requests
 requests==2.31.0
 
@@ -34,3 +33,4 @@ python-socketio==5.11.3  # Якщо socketio
 requests==2.32.3
 # Для БД: psycopg2-binary==2.9.9  # Не psycopg2, бо binary не компілює
 # Якщо openai: openai==1.51.0
+
