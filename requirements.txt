@@ -1,36 +1,3 @@
-# FastAPI and server dependencies
-fastapi==0.104.1
-uvicorn[standard]==0.24.0
-gunicorn==21.2.0
-pydantic==2.5.0
-
-# PDF processing dependencies
-pypdf==3.17.1
-pytesseract==0.3.10
-Pillow==11.2.0
-# HTTP requests
-requests==2.31.0
-
-# CORS middleware (included with FastAPI)
-
-# Additional dependencies for Docker health checks
-httpx==0.25.2
-
-# Environment variable management
-python-dotenv==1.0.0
-
-# For Vercel deployment
-mangum==0.17.0
-
-# Streamlit UI (added for new Streamlit app)
-streamlit==1.37.0
-humanize==4.9.0
-streamlit==1.38.0  # Стабільна, без важких deps
-fastapi==0.115.0
-uvicorn==0.30.6
-sqlalchemy==2.0.35  # Якщо БД
-python-socketio==5.11.3  # Якщо socketio
+streamlit==1.38.0
 requests==2.32.3
-# Для БД: psycopg2-binary==2.9.9  # Не psycopg2, бо binary не компілює
-# Якщо openai: openai==1.51.0
-
+Pillow==10.1.0  # Стабільна, з wheels
