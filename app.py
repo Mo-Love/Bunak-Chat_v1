@@ -1,45 +1,47 @@
 import streamlit as st
 import requests
-import os
 
 st.set_page_config(page_title="Bunak Chat", layout="wide")
-st.title("🗣️ Bunak Chat — Омніканальний консультант")
+st.title("🗣️ Bunak Chat — Твій онлайн-консультант")
 
-# Хедер
+# Хедер з донатом
 col1, col2 = st.columns([3, 1])
 with col1:
-    st.markdown("**Live-чат для сайтів + інструменти для резюме**")
+    st.markdown("**Омніканальний чат для клієнтів + інструменти**")
 with col2:
     st.markdown("[Донат ☕](https://buymeacoffee.com/molove)")
 
-# Секція чату (проста, з сесією)
-st.header("💬 Почни чат")
+# Чат-секція
+st.header("💬 Почніть спілкування")
 if "messages" not in st.session_state:
-    st.session_state.messages = [{"role": "assistant", "content": "Привіт! Як можу допомогти з кар'єрою чи чатом?"}]
+    st.session_state.messages = [{"role": "assistant", "content": "Привіт! Розкажіть, як можу допомогти?"}]
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
-if prompt := st.chat_input("Введи повідомлення..."):
+if prompt := st.chat_input("Ваше повідомлення..."):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
-    # Симуляція відповіді (заміни на AI пізніше)
-    response = f"Дякую за запит: '{prompt}'. Ось базова відповідь. Хочеш PDF-резюме?"
+    # Проста відповідь (додай AI пізніше)
+    response = f"Дякую за '{prompt}'! Ось ідея: спробуйте PDF-резюме для кар'єри."
     with st.chat_message("assistant"):
         st.markdown(response)
     st.session_state.messages.append({"role": "assistant", "content": response})
 
-# Секція PDF (з твого репо)
-st.header("📄 Завантаж резюме")
-token = st.text_input("Введи renderToken з resume.io")
-if st.button("Генерувати PDF") and token:
+# PDF-секція (з твого оригінального репо)
+st.header("📄 Завантажити резюме-PDF")
+token = st.text_input("Введіть renderToken з resume.io")
+if st.button("Генерувати") and token:
     try:
-        url = f"https://api.resume.io/render/{token}/pdf"  # Або твій ендпоінт
+        url = f"https://api.resume.io/render/{token}/pdf"
         resp = requests.get(url)
-        st.download_button("Скачай PDF", resp.content, "resume.pdf", "application/pdf")
+        if resp.status_code == 200:
+            st.download_button("Скачати PDF", resp.content, "resume.pdf", "application/pdf")
+        else:
+            st.error("Помилка API. Перевірте токен.")
     except Exception as e:
         st.error(f"Помилка: {e}")
 
-# Футер
+# Футер з омніканалом
 st.markdown("---")
-st.markdown("**Канали:** Веб | Telegram (скоро) | Email")
+st.markdown("**Канали:** Веб-чат | Telegram (скоро) | Email")
