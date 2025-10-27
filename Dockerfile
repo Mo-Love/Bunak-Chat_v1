@@ -1,49 +1,24 @@
-# Use Ubuntu 22.04 as base image
-FROM ubuntu:22.04
+FROM python:3.11-slim
 
-# Set environment variables
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
-    DEBIAN_FRONTEND=noninteractive \
-    TZ=UTC
-
-# Set work directory
-WORKDIR /app
-
-# Update and install system dependencies
+# Встановлюємо системні залежності для Pillow (lib'и)
 RUN apt-get update && apt-get install -y \
-    python3 \
-    python3-pip \
-    python3-dev \
-    tesseract-ocr \
-    libtesseract-dev \
-    tesseract-ocr-eng \
-    libgl1-mesa-glx \
-    libglib2.0-0 \
-    libsm6 \
-    libxext6 \
-    libxrender-dev \
-    libgomp1 \
-    wget \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
+    libjpeg-dev \
+    libpng-dev \
+    libtiff-dev \
+    zlib1g-dev \
+    && rm -rf /var/lib/apt/lists/*  # Очищуємо кеш, щоб уникнути read-only issues
 
-# Create symlink for python command
-RUN ln -s /usr/bin/python3 /usr/bin/python
-
-# Install ngrok
-# Upgrade pip
-RUN python3 -m pip install --upgrade pip
-
-# Copy requirements and install Python dependencies
+WORKDIR /app
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --upgrade pip && pip install -r requirements.txt
 
-# Copy application code
 COPY . .
 
-# Expose the port
-EXPOSE 8080
+# Експонуємо порт (Render використає $PORT)
+EXPOSE $PORT
 
-# Tunnel port 8080 (where your app is actually running)
-ENTRYPOINT ["sh", "-c", "gunicorn app:app -k uvicorn.workers.UvicornWorker --workers 2 --bind 0.0.0.0:8080"]
+# Запуск Streamlit з headless mode для серверу
+CMD ["streamlit", "run", "app.py", \
+     "--server.port=$PORT", \
+     "--server.address=0.0.0.0", \
+     "--server.headless=true"]
